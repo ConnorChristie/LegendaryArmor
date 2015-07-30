@@ -1,5 +1,5 @@
 name: LegendaryArmor
-main: com.enjin.devection.LegendaryArmor
+main: com.enjin.devection.main.LegendaryArmor
 version: 1.0
 
 commands:
