@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.text.WordUtils;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
@@ -12,12 +11,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffectType;
 
+import static org.bukkit.ChatColor.*;
+
 public enum LegendaryArmor
 {
 	//TODO: Config for setting name and material
 	
 	//Type  //Name      //Material
-	HELMET("Apollos",   Material.DIAMOND_HELMET, new Enchantment[] { 
+	HELMET(DARK_RED + "Apollos Crest", Material.DIAMOND_HELMET, new Enchantment[] { 
 			Enchantment.PROTECTION_ENVIRONMENTAL,
 			Enchantment.PROTECTION_FIRE,
 			Enchantment.DURABILITY,
@@ -26,7 +27,7 @@ public enum LegendaryArmor
 		},
 			new PotionLevel(PotionEffectType.NIGHT_VISION, 1)),
 	
-	CHEST( "Aegis",     Material.DIAMOND_CHESTPLATE, new Enchantment[] { 
+	CHEST(DARK_GREEN + "Aegis", Material.DIAMOND_CHESTPLATE, new Enchantment[] { 
 			Enchantment.PROTECTION_ENVIRONMENTAL,
 			Enchantment.PROTECTION_FIRE,
 			Enchantment.DURABILITY,
@@ -34,22 +35,22 @@ public enum LegendaryArmor
 		},
 			new PotionLevel(PotionEffectType.INCREASE_DAMAGE, 2)),
 	
-	LEGS(  "Ethereals", Material.DIAMOND_LEGGINGS, new Enchantment[] { 
-			Enchantment.PROTECTION_ENVIRONMENTAL,
-			Enchantment.PROTECTION_FIRE,
-			Enchantment.DURABILITY
-		},
-			new PotionLevel(PotionEffectType.INVISIBILITY, 1)),
-	
-	BOOTS( "Hermes",    Material.DIAMOND_BOOTS, new Enchantment[] { 
+	LEGS(DARK_GRAY + "Ethereals", Material.DIAMOND_LEGGINGS, new Enchantment[] { 
 			Enchantment.PROTECTION_ENVIRONMENTAL,
 			Enchantment.PROTECTION_FIRE,
 			Enchantment.DURABILITY,
-			Enchantment.PROTECTION_FALL
+			Enchantment.LOOT_BONUS_MOBS
+		},
+			new PotionLevel(PotionEffectType.INVISIBILITY, 1)),
+	
+	BOOTS(GOLD + "Hermes", Material.DIAMOND_BOOTS, new Enchantment[] { 
+			Enchantment.PROTECTION_ENVIRONMENTAL,
+			Enchantment.PROTECTION_FIRE,
+			Enchantment.DURABILITY,
+			Enchantment.PROTECTION_FALL,
+			Enchantment.DEPTH_STRIDER
 		},
 			new PotionLevel(PotionEffectType.SPEED, 2));
-	
-	public static String PREFIX = ChatColor.DARK_RED + "" + ChatColor.BOLD;
 	
 	private String name;
 	private Material material;
@@ -94,7 +95,7 @@ public enum LegendaryArmor
 		ItemStack item = new ItemStack(material, 1);
 		ItemMeta meta = item.getItemMeta();
 		
-		meta.setDisplayName(PREFIX + name);
+		meta.setDisplayName(name);
 		
 		for (Enchantment ench : enchantments)
 		{
@@ -106,12 +107,25 @@ public enum LegendaryArmor
 		
 		List<String> lore = new ArrayList<String>();
 		
-		lore.add(ChatColor.DARK_AQUA + "Legendary Helmet");
-		lore.add(ChatColor.GREEN + "Infused with: " + WordUtils.capitalize(potion.getPotion().getName().replace("_", " ").toLowerCase()));
+		lore.add(DARK_AQUA + "Legendary Helmet");
+		lore.add(GREEN + "Infused with: " + DARK_PURPLE + WordUtils.capitalize(potion.getPotion().getName().replace("_", " ").toLowerCase()));
 		
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		
 		return item;
+	}
+	
+	public static LegendaryArmor armor(String name)
+	{
+		for (LegendaryArmor armor : values())
+		{
+			if (armor.getName().toLowerCase().contains(name.toLowerCase()))
+			{
+				return armor;
+			}
+		}
+		
+		return null;
 	}
 }

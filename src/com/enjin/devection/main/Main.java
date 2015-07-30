@@ -2,9 +2,10 @@ package com.enjin.devection.main;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.enjin.devection.commands.LegendaryCommands;
 import com.enjin.devection.listener.LegendaryListener;
 
-public class LegendaryArmor extends JavaPlugin
+public class Main extends JavaPlugin
 {
 	/*
 		Apollos (Helmet) - Night Vision
@@ -15,6 +16,7 @@ public class LegendaryArmor extends JavaPlugin
 	
 	public void onEnable()
 	{
+		getCommand("legend").setExecutor(new LegendaryCommands());
 		getServer().getPluginManager().registerEvents(new LegendaryListener(), this);
 	}
 	

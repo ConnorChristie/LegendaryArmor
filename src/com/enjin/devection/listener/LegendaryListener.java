@@ -11,6 +11,11 @@ public class LegendaryListener implements Listener
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent event)
 	{
+		/*
 		event.getPlayer().getInventory().addItem(LegendaryArmor.HELMET.getItem());
+		event.getPlayer().getInventory().addItem(LegendaryArmor.CHEST.getItem());
+		event.getPlayer().getInventory().addItem(LegendaryArmor.LEGS.getItem());
+		event.getPlayer().getInventory().addItem(LegendaryArmor.BOOTS.getItem());
+		*/
 	}
 }
