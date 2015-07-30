@@ -1,0 +1,7 @@
+name: LegendaryArmor
+main: com.enjin.devection.LegendaryArmor
+version: 1.0
+
+commands:
+    legend:
+        description: Admin command only.
