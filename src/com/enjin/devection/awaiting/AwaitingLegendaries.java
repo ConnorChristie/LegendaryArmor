@@ -8,9 +8,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang3.StringUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
-import com.enjin.devection.armor.LegendaryArmor;
+import com.enjin.devection.legendary.LegendaryItem;
 import com.enjin.devection.main.Main;
 
 public class AwaitingLegendaries
@@ -18,7 +23,7 @@ public class AwaitingLegendaries
 	private File awaitingFile;
 	private YamlConfiguration awaitingConfig;
 	
-	private Map<UUID, List<LegendaryArmor>> awaitingLegendaries = new HashMap<UUID, List<LegendaryArmor>>();
+	private Map<UUID, List<LegendaryItem>> awaitingLegendaries = new HashMap<UUID, List<LegendaryItem>>();
 	
 	public AwaitingLegendaries()
 	{
@@ -35,9 +40,91 @@ public class AwaitingLegendaries
 		}
 	}
 	
-	public Map<UUID, List<LegendaryArmor>> getAwaiting()
+	public Map<UUID, List<LegendaryItem>> getAwaiting()
 	{
 		return awaitingLegendaries;
+	}
+	
+	public void addAwaiting(UUID uuid, LegendaryItem item)
+	{
+		List<LegendaryItem> items = new ArrayList<LegendaryItem>();
+		
+		if (awaitingLegendaries.containsKey(uuid)) items = awaitingLegendaries.get(uuid);
+		
+		items.add(item);
+		awaitingLegendaries.put(uuid, items);
+		
+		save();
+	}
+	
+	@SuppressWarnings("deprecation")
+	public void redeemLegendaries(Player player)
+	{
+		UUID uuid = player.getUniqueId();
+		
+		if (awaitingLegendaries.containsKey(uuid))
+		{
+			List<LegendaryItem> items = awaitingLegendaries.get(uuid);
+			
+			if (emptySlots(player.getInventory()) >= items.size())
+			{
+				for (LegendaryItem item : items)
+				{
+					player.getInventory().addItem(item.getItem());
+				}
+				
+				player.updateInventory();
+				player.sendMessage(Main.PRETTY_PREFIX + ChatColor.GREEN + "Added the legendary items to your inventory!");
+				
+				awaitingLegendaries.remove(uuid);
+			} else
+			{
+				int errorCount = 0;
+				
+				List<LegendaryItem> added = new ArrayList<LegendaryItem>();
+				List<LegendaryItem> errors = new ArrayList<LegendaryItem>();
+				
+				for (LegendaryItem item : items)
+				{
+					if (item.getInventoryItem(player) == null)
+					{
+						added.add(item);
+						item.setInventoryItem(player, item.getItem());
+					} else
+					{
+						errorCount++;
+						
+						errors.add(item);
+					}
+				}
+				
+				if (errorCount == 0)
+				{
+					player.sendMessage(Main.PRETTY_PREFIX + ChatColor.GREEN + "Placed the legendary items in your armor slots!");
+				} else if (errorCount != items.size())
+				{
+					player.sendMessage(Main.PRETTY_PREFIX + ChatColor.GREEN + "Added " + StringUtils.join(added, ", ") + " to your armor slots!");
+					player.sendMessage(Main.PRETTY_PREFIX + ChatColor.RED + "Please clear out slots for " + StringUtils.join(errors, ", "));
+				} else
+				{
+					player.sendMessage(Main.PRETTY_PREFIX + ChatColor.RED + "You do not have enough space in your inventory...");
+					player.sendMessage(Main.PRETTY_PREFIX + ChatColor.RED + "Please clear out " + items.size() + " slot" + (items.size() == 1 ? "" : "s") + "!");
+				}
+				
+				awaitingLegendaries.put(uuid, errors);
+			}
+			
+			save();
+		}
+	}
+	
+	private int emptySlots(PlayerInventory inv)
+	{
+		int empty = 0;
+		
+		for (ItemStack item : inv.getContents()) if (item == null) empty++;
+		
+		return empty;
 	}
 	
 	public void save()
@@ -62,11 +149,11 @@ public class AwaitingLegendaries
 	{
 		Map<String, List<String>> awaitingLegendariesConfig = new HashMap<String, List<String>>();
 		
-		for (Map.Entry<UUID, List<LegendaryArmor>> awaiting : awaitingLegendaries.entrySet())
+		for (Map.Entry<UUID, List<LegendaryItem>> awaiting : awaitingLegendaries.entrySet())
 		{
 			List<String> list = new ArrayList<String>();
 			
-			for (LegendaryArmor armor : awaiting.getValue())
+			for (LegendaryItem armor : awaiting.getValue())
 			{
 				list.add(armor.name());
 			}
@@ -84,11 +171,11 @@ public class AwaitingLegendaries
 		
 		for (Map.Entry<String, List<String>> awaiting : awaitingLegendariesConfig.entrySet())
 		{
-			List<LegendaryArmor> list = new ArrayList<LegendaryArmor>();
+			List<LegendaryItem> list = new ArrayList<LegendaryItem>();
 			
 			for (String armor : awaiting.getValue())
 			{
-				list.add(LegendaryArmor.valueOf(armor));
+				list.add(LegendaryItem.valueOf(armor));
 			}
 			
 			awaitingLegendaries.put(UUID.fromString(awaiting.getKey()), list);
