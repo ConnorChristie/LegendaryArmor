@@ -48,7 +48,7 @@ public class LegendaryCommands implements CommandExecutor
                             }
                             else
                             {
-                                Map<UUID, List<LegendaryArmor>> data = main.getAwaitingLegendaries();
+                                Map<UUID, List<LegendaryArmor>> data = main.getAwaitingLegendaries().getAwaiting();
                                 if(data.containsKey(player.getUniqueId()))
                                 {
                                     List<LegendaryArmor> previousValues = data.get(player.getUniqueId());
@@ -68,14 +68,14 @@ public class LegendaryCommands implements CommandExecutor
                 {
                     if(args[0].equalsIgnoreCase("redeem"))
                     {
-                        if(main.getAwaitingLegendaries().containsKey(((Player) sender).getUniqueId()))
+                        if(main.getAwaitingLegendaries().getAwaiting().containsKey(((Player) sender).getUniqueId()))
                         {
-                            List<LegendaryArmor> toGive = main.getAwaitingLegendaries().get(((Player) sender).getUniqueId());
+                            List<LegendaryArmor> toGive = main.getAwaitingLegendaries().getAwaiting().get(((Player) sender).getUniqueId());
                             for(LegendaryArmor armor: toGive)
                             {
                                 ((Player) sender).getInventory().addItem(armor.getItem());
                             }
-                            main.getAwaitingLegendaries().remove(((Player) sender).getUniqueId());
+                            main.getAwaitingLegendaries().getAwaiting().remove(((Player) sender).getUniqueId());
                             sender.sendMessage(PREFIX + "You received your items.");
                         } sender.sendMessage(PREFIX + "You have no redeemable legendary items.");
                     } else sender.sendMessage(PREFIX + "Usage: /legend redeem");
