@@ -1,17 +1,18 @@
 package com.enjin.devection.commands;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import com.enjin.devection.armor.LegendaryArmor;
-import com.enjin.devection.util.Utils;
 
 public class LegendaryCommands implements CommandExecutor
 {
 	private String PREFIX = "[LegendaryArmor] ";
+	private String PRETTY_PREFIX = ChatColor.GOLD + "[LegendaryArmor] " + ChatColor.AQUA;
 	
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
@@ -29,10 +30,10 @@ public class LegendaryCommands implements CommandExecutor
 					{
 						if (player.isOnline())
 						{
-							
+							player.getPlayer().sendMessage(PRETTY_PREFIX + "To collect your legendary, do: " + ChatColor.BOLD + "/legend claim");
 						} else
 						{
-							Utils.addToOfflineInventory(player, armor.getItem());
+							
 						}
 					} else
 						sender.sendMessage(PREFIX + "Could not find specified armor");
