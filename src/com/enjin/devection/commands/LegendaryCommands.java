@@ -59,7 +59,7 @@ public class LegendaryCommands implements CommandExecutor
 						main.getAwaitingLegendaries().redeemLegendaries(player);
 					} else
 						sender.sendMessage(Main.PRETTY_PREFIX + "Usage: /legend redeem");
-				}
+				} else  sender.sendMessage(Main.PRETTY_PREFIX + "Usage: /legend redeem");
 			}
 		}
 		
