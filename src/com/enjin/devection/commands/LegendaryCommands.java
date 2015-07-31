@@ -24,7 +24,7 @@ public class LegendaryCommands implements CommandExecutor
 	{
 		if (cmd.getName().equalsIgnoreCase("legend"))
 		{
-			if (sender instanceof ConsoleCommandSender)
+			if (sender instanceof ConsoleCommandSender || (sender instanceof Player && ((Player) sender).isOp()))
 			{
 				if (args.length == 2)
 				{
