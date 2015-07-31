@@ -23,6 +23,7 @@ public class Main extends JavaPlugin
 	{
 		instance = this;
 		
+		loadConfig();
 		loadLegendaries();
 		
 		registerCommands();
@@ -43,6 +44,11 @@ public class Main extends JavaPlugin
 	public AwaitingLegendaries getAwaitingLegendaries()
 	{
 		return awaitingLegendaries;
+	}
+	
+	private void loadConfig()
+	{
+		saveDefaultConfig();
 	}
 	
 	private void loadLegendaries()

@@ -10,8 +10,9 @@ import org.bukkit.inventory.ItemStack;
 
 import com.enjin.devection.events.ArmorEquipEvent;
 import com.enjin.devection.legendary.LegendaryItem;
-import com.enjin.devection.legendary.LegendaryType;
-import com.enjin.devection.legendary.LegendaryType.ArmorType;
+import com.enjin.devection.legendary.Legendary;
+import com.enjin.devection.legendary.Legendary.ArmorType;
+import com.enjin.devection.legendary.Legendary.Type;
 import com.enjin.devection.main.Main;
 
 public class LegendaryListener implements Listener
@@ -28,12 +29,8 @@ public class LegendaryListener implements Listener
 	{
 		if (event.getEntityType() == EntityType.PLAYER)
 		{
-			System.out.println("Food level changed");
-			
-			if (main.getLegendaryItems().getLegendary(LegendaryType.ARMOR.setArmorType(ArmorType.HELMET)).hasLegendary((Player) event.getEntity()))
+			if (main.getLegendaryItems().getLegendary(new Legendary(Type.ARMOR, ArmorType.HELMET)).hasLegendary((Player) event.getEntity()))
 			{
-				System.out.println("Food level updated");
-				
 				event.setFoodLevel(20);
 			}
 		}

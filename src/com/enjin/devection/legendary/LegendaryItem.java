@@ -1,10 +1,5 @@
 package com.enjin.devection.legendary;
 
-import static org.bukkit.ChatColor.DARK_AQUA;
-import static org.bukkit.ChatColor.DARK_PURPLE;
-import static org.bukkit.ChatColor.GREEN;
-
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,19 +13,21 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 
+import com.enjin.devection.legendary.Legendary.Type;
 import com.enjin.devection.main.Main;
+import com.enjin.devection.util.Utils;
 
 public class LegendaryItem implements ConfigurationSerializable
 {
 	private String name;
 	private Material material;
 	
-	private LegendaryType type;
+	private Legendary type;
 	
 	private Enchantment[] enchantments;
 	private PotionEffect potion;
 	
-	public LegendaryItem(String name, LegendaryType type, Material material, Enchantment[] enchantments, PotionEffect potion)
+	public LegendaryItem(String name, Legendary type, Material material, Enchantment[] enchantments, PotionEffect potion)
 	{
 		this.name = name;
 		this.material = material;
@@ -46,7 +43,7 @@ public class LegendaryItem implements ConfigurationSerializable
 		return name;
 	}
 	
-	public LegendaryType getType()
+	public Legendary getType()
 	{
 		return type;
 	}
@@ -100,10 +97,7 @@ public class LegendaryItem implements ConfigurationSerializable
 			}
 		}
 		
-		List<String> lore = new ArrayList<String>();
-		
-		lore.add(DARK_AQUA + "Legendary");
-		lore.add(GREEN + "Infused with: " + DARK_PURPLE + WordUtils.capitalize(potion.getType().getName().replace("_", " ").toLowerCase()));
+		List<String> lore = Main.getInstance().getLegendaryItems().getLoreLines(type.getArmorType() != null ? (" " + WordUtils.capitalize(type.getArmorType().name().toLowerCase())) : "", Utils.getRandomHexString(8).toUpperCase(), WordUtils.capitalize(potion.getType().getName().replace("_", " ").toLowerCase()));
 		
 		meta.setLore(lore);
 		item.setItemMeta(meta);
@@ -113,7 +107,7 @@ public class LegendaryItem implements ConfigurationSerializable
 	
 	public boolean hasLegendary(Player player)
 	{
-		if (type == LegendaryType.ITEM)
+		if (type.getType() == Type.ITEM)
 		{
 			for (ItemStack item : player.getInventory().getContents())
 			{
@@ -125,7 +119,7 @@ public class LegendaryItem implements ConfigurationSerializable
 					}
 				}
 			}
-		} else if (type == LegendaryType.ARMOR)
+		} else if (type.getType() == Type.ARMOR)
 		{
 			ItemStack item = getInventoryItem(player);
 			
@@ -146,15 +140,22 @@ public class LegendaryItem implements ConfigurationSerializable
 		return name;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public LegendaryItem(Map<String, Object> map)
 	{
 		name = (String) map.get("name");
-		material = (Material) map.get("material");
+		material = Material.getMaterial((String) map.get("material"));
 		
-		type = (LegendaryType) map.get("type");
-		
-		enchantments = (Enchantment[]) map.get("enchantments");
+		type = Legendary.getType((String) map.get("type"));
 		potion = (PotionEffect) map.get("potion");
+		
+		List<String> enchantNames = (List<String>) map.get("enchantments");
+		enchantments = new Enchantment[enchantNames.size()];
+		
+		for (int i = 0; i < enchantNames.size(); i++)
+		{
+			enchantments[i] = Enchantment.getByName(enchantNames.get(i));
+		}
 	}
 	
 	@Override
@@ -163,12 +164,19 @@ public class LegendaryItem implements ConfigurationSerializable
 		Map<String, Object> map = new HashMap<String, Object>();
 		
 		map.put("name", name);
-		map.put("material", material);
+		map.put("material", material.name());
 		
-		map.put("type", type);
-		
-		map.put("enchantments", enchantments);
+		map.put("type", type.getName());
 		map.put("potion", potion);
+		
+		String[] enchantNames = new String[enchantments.length];
+		
+		for (int i = 0; i < enchantments.length; i++)
+		{
+			enchantNames[i] = enchantments[i].getName();
+		}
+		
+		map.put("enchantments", enchantNames);
 		
 		return map;
 	}
