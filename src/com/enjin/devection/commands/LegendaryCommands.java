@@ -2,6 +2,7 @@ package com.enjin.devection.commands;
 
 import com.enjin.devection.main.Main;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,6 +14,8 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class LegendaryCommands implements CommandExecutor
 {
@@ -28,17 +31,30 @@ public class LegendaryCommands implements CommandExecutor
 	{
 		if (cmd.getName().equalsIgnoreCase("legend"))
 		{
-            if(sender instanceof ConsoleCommandSender) {
-                if (args.length == 2) {
+            if(sender instanceof ConsoleCommandSender)
+            {
+                if (args.length == 2)
+                {
                     OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
                     LegendaryArmor armor = LegendaryArmor.armor(args[1]);
 
-                    if (player != null && player.hasPlayedBefore()) {
-                        if (armor != null) {
-                            if (player.isOnline()) {
-
-                            } else {
-                                Utils.addToOfflineInventory(player, armor.getItem());
+                    if (player.hasPlayedBefore() || player.isOnline())
+                    {
+                        if (armor != null)
+                        {
+                            if (player.isOnline())
+                            {
+                                sender.sendMessage(PREFIX + "You have a new legendary item to redeem!" + ChatColor.GOLD + " /legend redeem");
+                            }
+                            else
+                            {
+                                Map<UUID, List<LegendaryArmor>> data = main.getAwaitingLegendaries();
+                                if(data.containsKey(player.getUniqueId()))
+                                {
+                                    List<LegendaryArmor> previousValues = data.get(player.getUniqueId());
+                                    previousValues.add(armor);
+                                    data.put(player.getUniqueId(), previousValues);
+                                }
                             }
                         } else
                             sender.sendMessage(PREFIX + "Could not find specified armor");
@@ -52,14 +68,14 @@ public class LegendaryCommands implements CommandExecutor
                 {
                     if(args[0].equalsIgnoreCase("redeem"))
                     {
-                        if(main.getAwaitingLegendaries.contains(((Player) sender).getUniqueId()))
+                        if(main.getAwaitingLegendaries().containsKey(((Player) sender).getUniqueId()))
                         {
-                            List<LegendaryArmor> toGive = main.getAwaitingLegendaries.get(((Player) sender).getUniqueId());
+                            List<LegendaryArmor> toGive = main.getAwaitingLegendaries().get(((Player) sender).getUniqueId());
                             for(LegendaryArmor armor: toGive)
                             {
                                 ((Player) sender).getInventory().addItem(armor.getItem());
                             }
-                            main.getAwaitingLegendaries.remove(((Player) sender).getUniqueId());
+                            main.getAwaitingLegendaries().remove(((Player) sender).getUniqueId());
                             sender.sendMessage(PREFIX + "You received your items.");
                         } sender.sendMessage(PREFIX + "You have no redeemable legendary items.");
                     } else sender.sendMessage(PREFIX + "Usage: /legend redeem");
