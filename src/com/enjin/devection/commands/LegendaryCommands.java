@@ -29,7 +29,7 @@ public class LegendaryCommands implements CommandExecutor
 				if (args.length == 2)
 				{
 					OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
-					LegendaryItem legendary = LegendaryItem.fromName(args[1]);
+					LegendaryItem legendary = main.getLegendaryItems().getLegendary(args[1]);
 					
 					if (player.hasPlayedBefore() || player.isOnline())
 					{
@@ -54,12 +54,7 @@ public class LegendaryCommands implements CommandExecutor
 				
 				if (args.length == 1)
 				{
-					//TODO: Remove test command
-					
-					if (args[0].equalsIgnoreCase("test"))
-					{
-						System.out.println("Has legendary: " + Main.getInstance().hasLegendary(player, LegendaryItem.BOOTS));
-					} else if (args[0].equalsIgnoreCase("redeem"))
+					if (args[0].equalsIgnoreCase("redeem"))
 					{
 						main.getAwaitingLegendaries().redeemLegendaries(player);
 					} else

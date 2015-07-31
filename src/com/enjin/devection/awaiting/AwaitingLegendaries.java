@@ -145,20 +145,13 @@ public class AwaitingLegendaries
 		awaitingLegendaries.clear();
 	}
 	
-	private Map<String, List<String>> serialize()
+	private Map<String, List<LegendaryItem>> serialize()
 	{
-		Map<String, List<String>> awaitingLegendariesConfig = new HashMap<String, List<String>>();
+		Map<String, List<LegendaryItem>> awaitingLegendariesConfig = new HashMap<String, List<LegendaryItem>>();
 		
 		for (Map.Entry<UUID, List<LegendaryItem>> awaiting : awaitingLegendaries.entrySet())
 		{
-			List<String> list = new ArrayList<String>();
-			
-			for (LegendaryItem armor : awaiting.getValue())
-			{
-				list.add(armor.name());
-			}
-			
-			awaitingLegendariesConfig.put(awaiting.getKey().toString(), list);
+			awaitingLegendariesConfig.put(awaiting.getKey().toString(), awaiting.getValue());
 		}
 		
 		return awaitingLegendariesConfig;
@@ -167,18 +160,11 @@ public class AwaitingLegendaries
 	@SuppressWarnings("unchecked")
 	private void deserialize(Object awaitingMap)
 	{
-		Map<String, List<String>> awaitingLegendariesConfig = (Map<String, List<String>>) awaitingMap;
+		Map<String, List<LegendaryItem>> awaitingLegendariesConfig = (Map<String, List<LegendaryItem>>) awaitingMap;
 		
-		for (Map.Entry<String, List<String>> awaiting : awaitingLegendariesConfig.entrySet())
+		for (Map.Entry<String, List<LegendaryItem>> awaiting : awaitingLegendariesConfig.entrySet())
 		{
-			List<LegendaryItem> list = new ArrayList<LegendaryItem>();
-			
-			for (String armor : awaiting.getValue())
-			{
-				list.add(LegendaryItem.valueOf(armor));
-			}
-			
-			awaitingLegendaries.put(UUID.fromString(awaiting.getKey()), list);
+			awaitingLegendaries.put(UUID.fromString(awaiting.getKey()), awaiting.getValue());
 		}
 	}
 }
