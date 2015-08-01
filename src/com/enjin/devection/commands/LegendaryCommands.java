@@ -22,44 +22,47 @@ public class LegendaryCommands implements CommandExecutor
 	@SuppressWarnings("deprecation")
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args)
 	{
-		if (cmd.getName().equalsIgnoreCase("legend"))
+		if (label.equalsIgnoreCase("legend"))
 		{
-			if (sender instanceof ConsoleCommandSender || (sender instanceof Player && sender.hasPermission("legendary.GiveEquipment")))
+			if (args[0].equalsIgnoreCase("redeem"))
 			{
-				if (args.length == 2)
+				if (sender instanceof Player)
 				{
-					OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
-					LegendaryItem legendary = main.getLegendaryItems().getLegendary(args[1]);
+					Player player = (Player) sender;
 					
-					if (player.hasPlayedBefore() || player.isOnline())
-					{
-						if (legendary != null)
-						{
-							if (player.isOnline())
-							{
-								player.getPlayer().sendMessage(Main.PRETTY_PREFIX + "You have a new legendary item to redeem!");
-								player.getPlayer().sendMessage(Main.PRETTY_PREFIX + "To redeem, type: /legend redeem");
-							}
-							
-							main.getAwaitingLegendaries().addAwaiting(player.getUniqueId(), legendary);
-						} else
-							sender.sendMessage(Main.PREFIX + "Could not find specified armor");
-					} else
-						sender.sendMessage(Main.PREFIX + "Could not find specified player");
-				} else
-					sender.sendMessage(Main.PREFIX + "Usage: /legend <player> <legendary>");
-			} else if (sender instanceof Player)
-			{
-				Player player = (Player) sender;
-				
-				if (args.length == 1)
-				{
-					if (args[0].equalsIgnoreCase("redeem"))
+					if (args.length == 1)
 					{
 						main.getAwaitingLegendaries().redeemLegendaries(player);
 					} else
 						sender.sendMessage(Main.PRETTY_PREFIX + "Usage: /legend redeem");
-				} else  sender.sendMessage(Main.PRETTY_PREFIX + "Usage: /legend redeem");
+				}
+			} else
+			{
+				if (sender instanceof ConsoleCommandSender || (sender instanceof Player && sender.hasPermission("legendary.give")))
+				{
+					if (args.length == 2)
+					{
+						OfflinePlayer player = Bukkit.getOfflinePlayer(args[0]);
+						LegendaryItem legendary = main.getLegendaryItems().getLegendary(args[1]);
+						
+						if (player.hasPlayedBefore() || player.isOnline())
+						{
+							if (legendary != null)
+							{
+								if (player.isOnline())
+								{
+									player.getPlayer().sendMessage(Main.PRETTY_PREFIX + "You have a new legendary item to redeem!");
+									player.getPlayer().sendMessage(Main.PRETTY_PREFIX + "To redeem, type: /legend redeem");
+								}
+								
+								main.getAwaitingLegendaries().addAwaiting(player.getUniqueId(), legendary);
+							} else
+								sender.sendMessage(Main.PREFIX + "Could not find specified armor");
+						} else
+							sender.sendMessage(Main.PREFIX + "Could not find specified player");
+					} else
+						sender.sendMessage(Main.PREFIX + "Usage: /legend <player> <legendary>");
+				}
 			}
 		}
 		

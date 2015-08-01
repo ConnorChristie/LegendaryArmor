@@ -7,5 +7,5 @@ commands:
         description: Admin command only.
 
 permissions:
-  legendary.GiveEquipment:
+  legendary.give:
     description: 'Gives the player the ability to act as the donation shop and give players legendary equipment.
