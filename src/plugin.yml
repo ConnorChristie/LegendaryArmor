@@ -5,3 +5,7 @@ version: 1.0
 commands:
     legend:
         description: Admin command only.
+
+permissions:
+  legendary.GiveEquipment:
+    description: 'Gives the player the ability to act as the donation shop and give players legendary equipment.
