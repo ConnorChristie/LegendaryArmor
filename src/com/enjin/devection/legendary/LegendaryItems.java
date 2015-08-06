@@ -45,7 +45,14 @@ public class LegendaryItems
 		
 		for (String line : loreLines)
 		{
-			lore.add(ChatColor.translateAlternateColorCodes('&', line).replace("{type}", type).replace("{code}", code).replace("{potion}", potion));
+			String temploreline = ChatColor.translateAlternateColorCodes('&', line).replace("{type}", type);
+			if (potion.equalsIgnoreCase("INCREASE_DAMAGE")){
+				temploreline.replace("{potion}", "Strength");
+			}
+			else{
+				temploreline.replace("{potion}", potion);
+			}
+			lore.add(temploreline);
 		}
 		
 		return lore;
@@ -86,8 +93,9 @@ public class LegendaryItems
 	
 	private void setDefaults()
 	{
-		loreLines.add("&3Legend{type}: &b{code}");
-		loreLines.add("&2Infused with: &a{potion}");
+		loreLines.add("&3Legend{type}");
+		loreLines.add("&2Infused with {potion}");
+		loreLines.add("&a{code}");
 		
 		legendaryItems.add(new LegendaryItem(
 				DARK_RED + "Apollos Crest",
@@ -97,6 +105,7 @@ public class LegendaryItems
 					Enchantment.PROTECTION_ENVIRONMENTAL,
 					Enchantment.PROTECTION_FIRE,
 					Enchantment.DURABILITY,
+					Enchantment.THORNS,
 					Enchantment.WATER_WORKER,
 					Enchantment.OXYGEN
 				},
@@ -111,7 +120,7 @@ public class LegendaryItems
 						Enchantment.PROTECTION_ENVIRONMENTAL,
 						Enchantment.PROTECTION_FIRE,
 						Enchantment.DURABILITY,
-						Enchantment.LOOT_BONUS_MOBS
+						Enchantment.THORNS
 				},
 				new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 2)
 			));
@@ -124,7 +133,7 @@ public class LegendaryItems
 						Enchantment.PROTECTION_ENVIRONMENTAL,
 						Enchantment.PROTECTION_FIRE,
 						Enchantment.DURABILITY,
-						Enchantment.LOOT_BONUS_MOBS
+						Enchantment.THORNS
 				},
 				new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1)
 			));

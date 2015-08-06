@@ -1,11 +1,11 @@
 name: LegendaryArmor
 main: com.enjin.devection.main.Main
-version: 1.0.1
+version: 1.0.2
 
 commands:
-    legend:
-        description: Admin command only.
+  legend:
+    description: Admin command only.
 
 permissions:
   legendary.give:
-    description: 'Gives the player the ability to act as the donation shop and give players legendary equipment.
+    description: Gives the player the ability to act as the donation shop and give players legendary equipment.

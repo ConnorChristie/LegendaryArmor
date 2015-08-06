@@ -93,11 +93,16 @@ public class LegendaryItem implements ConfigurationSerializable
 		{
 			if (ench.canEnchantItem(item))
 			{
+				if (ench.equals(Enchantment.PROTECTION_ENVIRONMENTAL)){
+					meta.addEnchant(ench, 5, true);
+				}
+				else{
 				meta.addEnchant(ench, ench.getMaxLevel(), true);
+				}
 			}
 		}
 		
-		List<String> lore = Main.getInstance().getLegendaryItems().getLoreLines(type.getArmorType() != null ? (" " + WordUtils.capitalize(type.getArmorType().name().toLowerCase())) : "", Utils.getRandomHexString(8).toUpperCase(), WordUtils.capitalize(potion.getType().getName().replace("_", " ").toLowerCase()));
+		List<String> lore = Main.getInstance().getLegendaryItems().getLoreLines(type.getArmorType() != null ? (" " + WordUtils.capitalize(type.getArmorType().name().toLowerCase())) : "", Utils.getRandomHexString(8).toLowerCase(), WordUtils.capitalize(potion.getType().getName().replace("_", " ").toLowerCase()));
 		
 		meta.setLore(lore);
 		item.setItemMeta(meta);

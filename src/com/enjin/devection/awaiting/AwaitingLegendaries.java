@@ -57,7 +57,6 @@ public class AwaitingLegendaries
 		save();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void redeemLegendaries(Player player)
 	{
 		UUID uuid = player.getUniqueId();
