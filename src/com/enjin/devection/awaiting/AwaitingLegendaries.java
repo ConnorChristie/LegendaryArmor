@@ -2,13 +2,16 @@ package com.enjin.devection.awaiting;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -55,9 +58,19 @@ public class AwaitingLegendaries
 		awaitingLegendaries.put(uuid, items);
 		
 		save();
+		
+		//Ok now add this code here:
+		
+		String date = new SimpleDateFormat("MM-dd-yyyy HH-mm-ssa").format(new Date());
+		
+		Main.getInstance().getCustomConfig().set("log." + date + ".item", item);
+		
+		Main.getInstance().getCustomConfig().set("log." + date + ".username", Bukkit.getOfflinePlayer(uuid).getName());
+		Main.getInstance().getCustomConfig().set("log." + date + ".uuid", uuid.toString());
+		
+		Main.getInstance().saveCustomConfig();
 	}
 	
-	@SuppressWarnings("deprecation")
 	public void redeemLegendaries(Player player)
 	{
 		UUID uuid = player.getUniqueId();

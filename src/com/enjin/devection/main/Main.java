@@ -1,6 +1,15 @@
 package com.enjin.devection.main;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
+
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.enjin.devection.awaiting.AwaitingLegendaries;
@@ -71,5 +80,64 @@ public class Main extends JavaPlugin
 	public static Main getInstance()
 	{
 		return instance;
+	}
+	
+	/*
+	 * Putting in legendary_data.yml to log username/UUID with legendary item
+	 * type and 8-digit hex code for each instance of the /legend <player>
+	 * <type> command.
+	 */
+	
+	private FileConfiguration customConfig = null;
+	private File customConfigFile = null;
+	
+	public void reloadCustomConfig()
+	{
+		try
+		{
+			if (customConfigFile == null)
+			{
+				customConfigFile = new File(getDataFolder(), "legendary_log.yml");
+			}
+			
+			if (!customConfigFile.exists())
+			{
+				customConfigFile.getParentFile().mkdirs();
+				customConfigFile.createNewFile();
+			}
+			
+			customConfig = YamlConfiguration.loadConfiguration(customConfigFile);
+			
+			//Dont need that
+			//Delete that, reply when done
+		} catch (IOException e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public FileConfiguration getCustomConfig()
+	{
+		if (customConfig == null)
+		{
+			reloadCustomConfig();
+		}
+		
+		return customConfig;
+	}
+	
+	public void saveCustomConfig()
+	{
+		if (customConfig == null || customConfigFile == null)
+		{
+			return;
+		}
+		try
+		{
+			getCustomConfig().save(customConfigFile);
+		} catch (IOException ex)
+		{
+			getLogger().log(Level.SEVERE, "Could not save config to " + customConfigFile, ex);
+		}
 	}
 }

@@ -2,6 +2,8 @@ package com.enjin.devection.commands;
 
 import com.enjin.devection.legendary.LegendaryItem;
 import com.enjin.devection.main.Main;
+import com.enjin.devection.util.Utils;
+
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -49,13 +51,17 @@ public class LegendaryCommands implements CommandExecutor
 						{
 							if (legendary != null)
 							{
-								if (player.isOnline())
-								{
-									player.getPlayer().sendMessage(Main.PRETTY_PREFIX + "You have a new legendary item to redeem!");
-									player.getPlayer().sendMessage(Main.PRETTY_PREFIX + "To redeem, type: /legend redeem");
-								}
+								legendary.setCode(Utils.getRandomHexString(8).toLowerCase());
 								
 								main.getAwaitingLegendaries().addAwaiting(player.getUniqueId(), legendary);
+								
+								if (player.isOnline())
+								{
+									main.getAwaitingLegendaries().redeemLegendaries(player.getPlayer());
+									
+									//player.getPlayer().sendMessage(Main.PRETTY_PREFIX + "You have a new legendary item to redeem!");
+									//player.getPlayer().sendMessage(Main.PRETTY_PREFIX + "To redeem, type: /legend redeem");
+								}
 							} else
 								sender.sendMessage(Main.PREFIX + "Could not find specified armor");
 						} else

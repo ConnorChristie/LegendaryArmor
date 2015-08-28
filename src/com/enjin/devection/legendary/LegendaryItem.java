@@ -15,7 +15,6 @@ import org.bukkit.potion.PotionEffect;
 
 import com.enjin.devection.legendary.Legendary.Type;
 import com.enjin.devection.main.Main;
-import com.enjin.devection.util.Utils;
 
 public class LegendaryItem implements ConfigurationSerializable
 {
@@ -23,6 +22,7 @@ public class LegendaryItem implements ConfigurationSerializable
 	private Material material;
 	
 	private Legendary type;
+	private String code;
 	
 	private Enchantment[] enchantments;
 	private PotionEffect potion;
@@ -48,6 +48,16 @@ public class LegendaryItem implements ConfigurationSerializable
 		return type;
 	}
 	
+	public void setCode(String code)
+	{
+		this.code = code;
+	}
+	
+	public String getCode()
+	{
+		return code;
+	}
+	
 	public Material getMaterial()
 	{
 		return material;
@@ -62,10 +72,14 @@ public class LegendaryItem implements ConfigurationSerializable
 	{
 		switch (type.getArmorType())
 		{
-			case HELMET:     return player.getInventory().getHelmet();
-			case CHESTPLATE: return player.getInventory().getChestplate();
-			case LEGGINGS:   return player.getInventory().getLeggings();
-			case BOOTS:      return player.getInventory().getBoots();
+			case HELMET:
+				return player.getInventory().getHelmet();
+			case CHESTPLATE:
+				return player.getInventory().getChestplate();
+			case LEGGINGS:
+				return player.getInventory().getLeggings();
+			case BOOTS:
+				return player.getInventory().getBoots();
 		}
 		
 		return null;
@@ -75,10 +89,18 @@ public class LegendaryItem implements ConfigurationSerializable
 	{
 		switch (type.getArmorType())
 		{
-			case HELMET:     player.getInventory().setHelmet(item); break;
-			case CHESTPLATE: player.getInventory().setChestplate(item); break;
-			case LEGGINGS:   player.getInventory().setLeggings(item); break;
-			case BOOTS:      player.getInventory().setBoots(item); break;
+			case HELMET:
+				player.getInventory().setHelmet(item);
+				break;
+			case CHESTPLATE:
+				player.getInventory().setChestplate(item);
+				break;
+			case LEGGINGS:
+				player.getInventory().setLeggings(item);
+				break;
+			case BOOTS:
+				player.getInventory().setBoots(item);
+				break;
 		}
 	}
 	
@@ -93,12 +115,21 @@ public class LegendaryItem implements ConfigurationSerializable
 		{
 			if (ench.canEnchantItem(item))
 			{
-				meta.addEnchant(ench, ench.getMaxLevel(), true);
+				if (ench.equals(Enchantment.PROTECTION_ENVIRONMENTAL))
+				{
+					meta.addEnchant(ench, 5, true);
+				} else
+				{
+					meta.addEnchant(ench, ench.getMaxLevel(), true);
+				}
 			}
 		}
 		
-		List<String> lore = Main.getInstance().getLegendaryItems().getLoreLines(type.getArmorType() != null ? (" " + WordUtils.capitalize(type.getArmorType().name().toLowerCase())) : "", Utils.getRandomHexString(8).toUpperCase(), WordUtils.capitalize(potion.getType().getName().replace("_", " ").toLowerCase()));
-		
+		List<String> lore = Main.getInstance().getLegendaryItems().getLoreLines(
+				type.getArmorType() != null ? (" " + WordUtils.capitalize(type.getArmorType().name().toLowerCase())) : "",
+				getCode(),
+				WordUtils.capitalize(potion.getType().getName().replace("_", " ").toLowerCase()));
+				
 		meta.setLore(lore);
 		item.setItemMeta(meta);
 		
@@ -149,6 +180,8 @@ public class LegendaryItem implements ConfigurationSerializable
 		type = Legendary.getType((String) map.get("type"));
 		potion = (PotionEffect) map.get("potion");
 		
+		code = (String) map.get("code");
+		
 		List<String> enchantNames = (List<String>) map.get("enchantments");
 		enchantments = new Enchantment[enchantNames.size()];
 		
@@ -165,6 +198,8 @@ public class LegendaryItem implements ConfigurationSerializable
 		
 		map.put("name", name);
 		map.put("material", material.name());
+		
+		map.put("code", code);
 		
 		map.put("type", type.getName());
 		map.put("potion", potion);

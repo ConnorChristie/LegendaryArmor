@@ -45,7 +45,17 @@ public class LegendaryItems
 		
 		for (String line : loreLines)
 		{
-			lore.add(ChatColor.translateAlternateColorCodes('&', line).replace("{type}", type).replace("{code}", code).replace("{potion}", potion));
+			String temploreline = line.replace("{type}", type).replace("{code}", code);
+			
+			if (potion.equalsIgnoreCase("INCREASE_DAMAGE"))
+			{
+				temploreline = temploreline.replace("{potion}", "Strength");
+			} else
+			{
+				temploreline = temploreline.replace("{potion}", potion);
+			}
+			
+			lore.add(ChatColor.translateAlternateColorCodes('&', temploreline));
 		}
 		
 		return lore;
@@ -86,61 +96,24 @@ public class LegendaryItems
 	
 	private void setDefaults()
 	{
-		loreLines.add("&3Legend{type}: &b{code}");
-		loreLines.add("&2Infused with: &a{potion}");
+		loreLines.add("&3Legend{type}");
+		loreLines.add("&2Infused with {potion}");
+		loreLines.add("&a{code}");
 		
-		legendaryItems.add(new LegendaryItem(
-				DARK_RED + "Apollos Crest",
-				new Legendary(Type.ARMOR, ArmorType.HELMET),
-				Material.DIAMOND_HELMET,
-				new Enchantment[] { 
-					Enchantment.PROTECTION_ENVIRONMENTAL,
-					Enchantment.PROTECTION_FIRE,
-					Enchantment.DURABILITY,
-					Enchantment.WATER_WORKER,
-					Enchantment.OXYGEN
-				},
-				new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1)
-			));
-		
-		legendaryItems.add(new LegendaryItem(
-				DARK_GREEN + "Aegis",
-				new Legendary(Type.ARMOR, ArmorType.CHESTPLATE),
-				Material.DIAMOND_CHESTPLATE,
-				new Enchantment[] { 
-						Enchantment.PROTECTION_ENVIRONMENTAL,
-						Enchantment.PROTECTION_FIRE,
-						Enchantment.DURABILITY,
-						Enchantment.LOOT_BONUS_MOBS
-				},
-				new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 2)
-			));
-		
-		legendaryItems.add(new LegendaryItem(
-				DARK_GRAY + "Ethereals",
-				new Legendary(Type.ARMOR, ArmorType.LEGGINGS),
-				Material.DIAMOND_LEGGINGS,
-				new Enchantment[] { 
-						Enchantment.PROTECTION_ENVIRONMENTAL,
-						Enchantment.PROTECTION_FIRE,
-						Enchantment.DURABILITY,
-						Enchantment.LOOT_BONUS_MOBS
-				},
-				new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1)
-			));
-		
-		legendaryItems.add(new LegendaryItem(
-				GOLD + "Hermes",
-				new Legendary(Type.ARMOR, ArmorType.BOOTS),
-				Material.DIAMOND_BOOTS,
-				new Enchantment[] { 
-						Enchantment.PROTECTION_ENVIRONMENTAL,
-						Enchantment.PROTECTION_FIRE,
-						Enchantment.DURABILITY,
-						Enchantment.PROTECTION_FALL,
-						Enchantment.DEPTH_STRIDER
-				},
-				new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2)
-			));
+		legendaryItems.add(new LegendaryItem(DARK_RED + "Apollos Crest", new Legendary(Type.ARMOR, ArmorType.HELMET), Material.DIAMOND_HELMET,
+				new Enchantment[] { Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.PROTECTION_FIRE, Enchantment.DURABILITY, Enchantment.THORNS, Enchantment.WATER_WORKER, Enchantment.OXYGEN },
+				new PotionEffect(PotionEffectType.NIGHT_VISION, Integer.MAX_VALUE, 1)));
+				
+		legendaryItems.add(new LegendaryItem(DARK_GREEN + "Aegis", new Legendary(Type.ARMOR, ArmorType.CHESTPLATE), Material.DIAMOND_CHESTPLATE,
+				new Enchantment[] { Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.PROTECTION_FIRE, Enchantment.DURABILITY, Enchantment.THORNS },
+				new PotionEffect(PotionEffectType.INCREASE_DAMAGE, Integer.MAX_VALUE, 2)));
+				
+		legendaryItems.add(new LegendaryItem(DARK_GRAY + "Ethereals", new Legendary(Type.ARMOR, ArmorType.LEGGINGS), Material.DIAMOND_LEGGINGS,
+				new Enchantment[] { Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.PROTECTION_FIRE, Enchantment.DURABILITY, Enchantment.THORNS },
+				new PotionEffect(PotionEffectType.INVISIBILITY, Integer.MAX_VALUE, 1)));
+				
+		legendaryItems.add(new LegendaryItem(GOLD + "Hermes", new Legendary(Type.ARMOR, ArmorType.BOOTS), Material.DIAMOND_BOOTS,
+				new Enchantment[] { Enchantment.PROTECTION_ENVIRONMENTAL, Enchantment.PROTECTION_FIRE, Enchantment.DURABILITY, Enchantment.PROTECTION_FALL, Enchantment.DEPTH_STRIDER },
+				new PotionEffect(PotionEffectType.SPEED, Integer.MAX_VALUE, 2)));
 	}
 }
